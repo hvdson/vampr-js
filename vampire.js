@@ -54,12 +54,7 @@ class Vampire {
       return this;
     } else if (vampireOGDistance === 0) {
       return vampire;
-    } else {
-      
     }
-
-
-
   }
 }
 
