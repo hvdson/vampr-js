@@ -23,8 +23,8 @@ class Vampire {
   get numberOfVampiresFromOriginal() {
     let count = 0;
     let currentVampire = this;
-    
-    while(currentVampire.creator) {
+
+    while (currentVampire.creator) {
       currentVampire = currentVampire.creator;
       count++;
     }
@@ -43,17 +43,70 @@ class Vampire {
 
   // Returns the vampire object with that name, or null if no vampire exists with that name
   vampireWithName(name) {
-    
+
+    // TODO: NEED TO REFACTOR THIS!!!
+
+    if (!this) {
+      return null;
+    }
+
+    if (this.name === name) {
+      return this;
+    }
+
+    let foundVampire = null;
+
+    for (const offspring of this.offspring) {
+      foundVampire = offspring.vampireWithName(name);
+      if (foundVampire) {
+        return foundVampire;
+      }
+    }
+
+    return foundVampire;
+
   }
 
   // Returns the total number of vampires that exist
   get totalDescendents() {
-    
+    // initialize count to 0
+    let count = 0;
+
+    // base case: no descendants return count
+    if (this.numberOfOffspring === 0) {
+      return count;
+
+      // if descendents:
+    } else {
+      // loop through offspring
+      for (let child of this.offspring) {
+        // found a descendant - add 1 to count
+        count++;
+        // recursive case: get the amt of descendents from children and add them to count
+        count += child.totalDescendents;
+      }
+    }
+    // return count
+    return count;
   }
 
   // Returns an array of all the vampires that were converted after 1980
   get allMillennialVampires() {
-    
+    // initialize millenial array
+    let millenials = [];
+
+    // base case: no descendants && this not a millenial
+    if (this.yearConverted > 1980) {
+      millenials.push(this);
+    }
+    // DON'T USE else STATEMENT - doesn't let the recursion continue!!! 
+    // recursive case: go through offspring and pass each one back in recursively
+    for (let child of this.offspring) {
+      const childMillenials = child.allMillennialVampires;
+      millenials = millenials.concat(childMillenials);
+    }
+    // return the array of millenials
+    return millenials;
   }
 
   /** Stretch **/
@@ -76,4 +129,3 @@ class Vampire {
 }
 
 module.exports = Vampire;
-
